@@ -20,9 +20,22 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Ls
-        shell: bash
-        run: ls -l . && mkdir -p dist && echo 'hello' > dist/baz.txt && ls dist
+      # - name: Ls
+      #   shell: bash
+      #   run: ls -l . && mkdir -p dist && echo 'hello' > dist/baz.txt && ls dist
+
+      - name: Output artifact ID
+        run: echo 'Artifact ID is ${{ steps.artifact-upload-step.outputs.artifact-id }}'
+
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+
+      - name: Install dependencies
+        run: deno install --allow-scripts=npm:sharp,npm:@parcel/watcher
+
+      - name: Build dist
+        run: deno task build
 
       - uses: actions/upload-artifact@v4
         id: artifact-upload-step
@@ -31,28 +44,6 @@ jobs:
           path: dist/
           if-no-files-found: error
           retention-days: 1
-
-      - name: Output artifact ID
-        run: echo 'Artifact ID is ${{ steps.artifact-upload-step.outputs.artifact-id }}'
-
-      # - uses: denoland/setup-deno@v2
-      #   with:
-      #     deno-version: v2.x
-
-      # - name: Install dependencies
-      #   run: deno install --allow-scripts=npm:sharp,npm:@parcel/watcher
-      #
-      # - name: Build dist
-      #   run: deno task build
-
-      # - name: Docker meta
-      #   id: meta
-      #   uses: docker/metadata-action@v4
-      #   with:
-      #     images: ghcr.io/${{ github.repository }}
-      #     tags: |
-      #       type=semver,pattern={{version}}
-      #       type=semver,pattern={{major}}.{{minor}}
 
   build_see:
     name: See build
@@ -67,11 +58,16 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: my-artifact
+          path: dist/
 
       - name: Display structure of downloaded files
         run: ls -R
 
-    # steps:
-    #   - name: Ls
-    #     shell: bash
-    #     run: ls -l .
+      # - name: Docker meta
+      #   id: meta
+      #   uses: docker/metadata-action@v4
+      #   with:
+      #     images: ghcr.io/${{ github.repository }}
+      #     tags: |
+      #       type=semver,pattern={{version}}
+      #       type=semver,pattern={{major}}.{{minor}}
