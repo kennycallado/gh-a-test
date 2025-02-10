@@ -114,14 +114,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - uses: actions/download-artifact@v4
-        with:
-          name: my-artifact
-          path: app/
-
-      - name: Display structure of downloaded files
-        run: ls -l app/ && pwd && echo $PWD
-
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v4
@@ -140,6 +132,14 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - uses: actions/download-artifact@v4
+        with:
+          name: my-artifact
+          path: app/
+
+      - name: Display structure of downloaded files
+        run: ls && ls -l app/ && ls $PWD/app
+
       - name: Build and push
         id: docker_build
         uses: docker/build-push-action@v6
@@ -149,8 +149,6 @@ jobs:
           push: true
           labels: ${{ steps.meta.outputs.labels }}
           tags: ${{ steps.meta.outputs.tags }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
