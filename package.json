@@ -9,6 +9,10 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^5.2.5"
+    "@astrojs/lit": "^4.3.0",
+    "@webcomponents/template-shadowroot": "^0.2.1",
+    "@webslab/shared": "^0.2.0",
+    "astro": "^5.2.5",
+    "lit": "^3.2.1"
   }
 }

@@ -1,0 +1,32 @@
+name: Build Images
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  build_ghcr:
+    name: Build GHCR images
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+
+      - name: Foo
+        shell: bash
+        run: echo 'hola'

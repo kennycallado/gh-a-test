@@ -7,9 +7,39 @@
 		<meta name="generator" content={Astro.generator} />
 		<title>Astro Basics</title>
 	</head>
+
 	<body>
-		<slot />
+    <h1>hola</h1>
+    <wl-security
+      needs={JSON.stringify({auth: false, admin: false})}
+      style="--wl-security-bg: rgba(200, 0, 200, 0.7)">
+
+      <main
+        class="container bg-body-tertiary rounded shadow-lg"
+        id="content"
+        slot="content">
+        <div class="p-1">
+          <slot />
+        </div>
+      </main>
+
+    </wl-security>
 	</body>
+
+  <script>
+  import '@webslab/shared/components/security';
+
+  import { authService } from '../lib/auth.ts';
+  import { waitElement } from '../lib/utils.ts';
+
+  customElements
+    .whenDefined('wl-security')
+    .then(async () => {
+      const wlSecurity = await waitElement('wl-security')
+
+      wlSecurity.auth = authService;
+    });
+  </script>
 </html>
 
 <style>
