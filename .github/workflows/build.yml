@@ -25,7 +25,7 @@ jobs:
         run: ls -l . && mkdir -p dist && echo 'hello' > dist/baz.txt && ls dist
 
       - uses: actions/upload-artifact@v4
-        id: upload-dist
+        id: artifact-upload-step
         with:
           name: my-artifact
           path: dist/
@@ -33,7 +33,7 @@ jobs:
           retention-days: 1
 
       - name: Output artifact ID
-        run: echo 'Artifact ID is ${{ steps.upload-dist.outputs.upload-distartifact-id }}'
+        run: echo 'Artifact ID is ${{ steps.artifact-upload-step.outputs.artifact-id }}'
 
       # - uses: denoland/setup-deno@v2
       #   with:
