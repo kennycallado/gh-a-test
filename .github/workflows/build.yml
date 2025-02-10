@@ -37,6 +37,10 @@ jobs:
       - name: Build app
         run: deno task build
 
+      - name: Build app
+        shell: bash
+        run: mv dist app
+
       - uses: actions/upload-artifact@v4
         id: artifact-upload-step
         with:
