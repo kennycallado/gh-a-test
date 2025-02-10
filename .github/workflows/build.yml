@@ -46,7 +46,7 @@ jobs:
           retention-days: 1
 
   build_images_ghcr:
-    name: See build
+    name: Build images ghcr
     needs: [build_dist]
     runs-on: ubuntu-latest
     permissions:
@@ -76,7 +76,7 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
 
   build_images_hub:
-    name: See build
+    name: Build images hub
     needs: [build_dist]
     runs-on: ubuntu-latest
     permissions:
