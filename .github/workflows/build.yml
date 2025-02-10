@@ -45,16 +45,19 @@ jobs:
           if-no-files-found: error
           retention-days: 1
 
-  build_see:
+  build_images_ghcr:
     name: See build
     needs: [build_dist]
     runs-on: ubuntu-latest
     permissions:
-      actions: write
+      actions: read
       contents: read
       packages: write
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - uses: actions/download-artifact@v4
         with:
           name: my-artifact
@@ -63,11 +66,40 @@ jobs:
       - name: Display structure of downloaded files
         run: ls -R
 
-      # - name: Docker meta
-      #   id: meta
-      #   uses: docker/metadata-action@v4
-      #   with:
-      #     images: ghcr.io/${{ github.repository }}
-      #     tags: |
-      #       type=semver,pattern={{version}}
-      #       type=semver,pattern={{major}}.{{minor}}
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+
+  build_images_hub:
+    name: See build
+    needs: [build_dist]
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: my-artifact
+          path: dist/
+
+      - name: Display structure of downloaded files
+        run: ls -R
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ github.repository }}
+          tags: |
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
