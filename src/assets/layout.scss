@@ -1,0 +1,12 @@
+$primary: teal;
+
+body {
+  color: $primary;
+  background-color: rgba(200, 0, 200, 0.1);
+
+  h1 {
+    font-family: "Arial", sans-serif;
+    font-size: 4em;
+    text-align: center;
+  }
+}

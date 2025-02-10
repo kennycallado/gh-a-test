@@ -1,3 +1,7 @@
+---
+import '../assets/layout.scss'
+---
+
 <!doctype html>
 <html lang="en">
 	<head>
@@ -10,6 +14,7 @@
 
 	<body>
     <h1>hola</h1>
+
     <wl-security
       needs={JSON.stringify({auth: false, admin: false})}
       style="--wl-security-bg: rgba(200, 0, 200, 0.7)">
