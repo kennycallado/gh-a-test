@@ -8,8 +8,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  build_dist:
-    name: Build dist
+  build_app:
+    name: Build app
     runs-on: ubuntu-latest
     permissions:
       actions: write
@@ -22,7 +22,7 @@ jobs:
 
       # - name: Ls
       #   shell: bash
-      #   run: ls -l . && mkdir -p dist && echo 'hello' > dist/baz.txt && ls dist
+      #   run: ls -l . && mkdir -p app && echo 'hello' > app/baz.txt && ls app
 
       - name: Output artifact ID
         run: echo 'Artifact ID is ${{ steps.artifact-upload-step.outputs.artifact-id }}'
@@ -34,20 +34,20 @@ jobs:
       - name: Install dependencies
         run: deno install --allow-scripts=npm:sharp,npm:@parcel/watcher
 
-      - name: Build dist
+      - name: Build app
         run: deno task build
 
       - uses: actions/upload-artifact@v4
         id: artifact-upload-step
         with:
           name: my-artifact
-          path: dist/
+          path: app/
           if-no-files-found: error
           retention-days: 1
 
   build_images_ghcr:
     name: Build images ghcr
-    needs: [build_dist]
+    needs: [build_app]
     runs-on: ubuntu-latest
     permissions:
       actions: read
@@ -61,10 +61,10 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: my-artifact
-          path: dist/
+          path: app/
 
       - name: Display structure of downloaded files
-        run: ls -R
+        run: ls -R app/
 
       - name: Docker meta
         id: meta
@@ -100,7 +100,7 @@ jobs:
 
   build_images_hub:
     name: Build images hub
-    needs: [build_dist]
+    needs: [build_app]
     runs-on: ubuntu-latest
     permissions:
       actions: read
@@ -113,10 +113,10 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: my-artifact
-          path: dist/
+          path: app/
 
       - name: Display structure of downloaded files
-        run: ls -R
+        run: ls -R app/
 
       - name: Docker meta
         id: meta
